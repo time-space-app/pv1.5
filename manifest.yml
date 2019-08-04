@@ -1,0 +1,11 @@
+---
+applications:
+- name: timespace
+  memory: 512M
+  host: timespace
+  domain: paas-ta.org
+  services:
+  - wp-mysql-db
+  - wp-glusterfs
+  instances: 1
+  disk_quota: 512M

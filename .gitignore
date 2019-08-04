@@ -1,0 +1,4 @@
+# db 설정파일
+time-space/**/db.php
+# .tmb 임시폴더
+.tmb/
