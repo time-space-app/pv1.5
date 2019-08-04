@@ -82,44 +82,59 @@ if($result_cnt>0){
     echo "<meta http-equiv='Refresh' content='0;url=/'>";
     exit;
 }else{?>
-<?php
-//테이블 생성
-$file = implode("", file(GPLDIR."/sql/ALL.sql"));
-if($file == null){ echo "테이블 생성파일이 없습니다.<br />"; exit; }
-eval("\$file = \"$file\";");
+    <?php
+    //테이블 생성
+    $file = implode("", file(GPLDIR."/sql/ALL.sql"));
+    if($file == null){ echo "테이블 생성파일이 없습니다.<br />"; exit; }
+    eval("\$file = \"$file\";");
 
-$f = explode(";", $file);
-for ($i=0; $i<count($f); $i++) {
-    if (trim($f[$i]) == "") continue;
-    mysqli_query($connect,$f[$i]) or die(mysqli_error());
-}
+    $f = explode(";", $file);
+    for ($i=0; $i<count($f); $i++) {
+        if (trim($f[$i]) == "") continue;
+        mysqli_query($connect,$f[$i]) or die(mysqli_error());
+    }
 
-/* 초기값 입력 순서 사용자-메뉴-콘텐츠 Start */
-$sql= "
-INSERT INTO `T_MEMBER` (`LOGIN_ID`, `LOGIN_PWD`, `USER_NM`, `USER_LEVEL`, `USE_YN`, `USER_EMAIL`, `EMAIL_YN`, `AGREE_YN`, `CREATE_DT`, `UPDATE_DT`) VALUES
-('admin', sha1('admin1234'), '관리자', 1, 'Y', '@', 'on', 'on', '2013-05-25 15:59:29', '2019-07-16 16:08:17'),
-('staff', sha1('admin1234'), '스탭', 2, 'Y', '@', 'on', 'on', '2019-07-16 16:00:22', '2019-07-16 18:34:35'),
-('user', sha1('admin1234'), '회원', 9, 'Y', '@', 'on', 'on', '2019-07-16 16:01:15', '2019-07-16 18:34:48');
-";
-mysqli_query($connect,$sql) or die(mysqli_error());
-$sql= "
-INSERT INTO `T_L_MENU` (`SEQ`, `SUN`, `L_CODE`, `L_NAME`, `L_URL`, `USE_YN`) VALUES
-(1, 1, '001', 'MENU1', '001000000', 'Y');
-";
-mysqli_query($connect,$sql) or die(mysqli_error());
-$fp19=fopen(GPLPLUGIN."/dump_content.php", "r");
-if($fp19 == null){ echo "파일이 없습니다.<br />"; exit; }
-$fr19=fread($fp19, filesize(GPLPLUGIN."/dump_content.php"));fclose($fp19);
-$CONTENT19=addslashes($fr19);
-$CONTENT=htmlspecialchars($CONTENT19);
-$sql= "
-INSERT INTO `T_CMS` (`L_CODE`, `M_CODE`, `S_CODE`, `USER_ID`, `USER_NM`, `EMAIL`, `TITLE`, `CONTENT`, `REGDATE`, `READCOUNT`) VALUES
-('001', '000', '000', 'admin', '관리자', '@', 'MENU1', '".$CONTENT."', '2019-07-17 14:36:05', 13);
-";
-mysqli_query($connect,$sql) or die(mysqli_error());
-/* 초기값 입력 순서 사용자-메뉴-콘텐츠 End */
+    /* 초기값 입력 순서 사용자-메뉴-콘텐츠 Start */
+    $sql= "
+    INSERT INTO `T_MEMBER` (`LOGIN_ID`, `LOGIN_PWD`, `USER_NM`, `USER_LEVEL`, `USE_YN`, `USER_EMAIL`, `EMAIL_YN`, `AGREE_YN`, `CREATE_DT`, `UPDATE_DT`) VALUES
+    ('admin', sha1('admin1234'), '관리자', 1, 'Y', '@', 'on', 'on', '2013-05-25 15:59:29', '2019-07-16 16:08:17'),
+    ('staff', sha1('admin1234'), '스탭', 2, 'Y', '@', 'on', 'on', '2019-07-16 16:00:22', '2019-07-16 18:34:35'),
+    ('user', sha1('admin1234'), '회원', 9, 'Y', '@', 'on', 'on', '2019-07-16 16:01:15', '2019-07-16 18:34:48');
+    ";
+    mysqli_query($connect,$sql) or die(mysqli_error());
+    $sql= "
+    INSERT INTO `T_L_MENU` (`SEQ`, `SUN`, `L_CODE`, `L_NAME`, `L_URL`, `USE_YN`) VALUES
+    (1, 1, '001', 'MENU1', '001000000', 'Y');
+    ";
+    mysqli_query($connect,$sql) or die(mysqli_error());
+    $fp19=fopen(GPLPLUGIN."/dump_content.php", "r");
+    if($fp19 == null){ echo "파일이 없습니다.<br />"; exit; }
+    $fr19=fread($fp19, filesize(GPLPLUGIN."/dump_content.php"));fclose($fp19);
+    $CONTENT19=addslashes($fr19);
+    $CONTENT=htmlspecialchars($CONTENT19);
+    $sql= "
+    INSERT INTO `T_CMS` (`L_CODE`, `M_CODE`, `S_CODE`, `USER_ID`, `USER_NM`, `EMAIL`, `TITLE`, `CONTENT`, `REGDATE`, `READCOUNT`) VALUES
+    ('001', '000', '000', 'admin', '관리자', '@', 'MENU1', '".$CONTENT."', '2019-07-17 14:36:05', 13);
+    ";
+    mysqli_query($connect,$sql) or die(mysqli_error());
+    /* 초기값 입력 순서 사용자-메뉴-콘텐츠 End */
+    $dbfile = implode("", file(GPLDIR."/core/config/db.php"));
+    if($dbfile == null){ 
+        // DB 설정 파일 생성
+        @chmod(GPLDIR."/core/config", 0707);
+        $file = GPLDIR."/core/config/db.php";
+        $f = @fopen($file, "w");
+        fwrite($f, "<?php\n");
+        fwrite($f, "\$GPLdb_host = '$DB_HOST';\n");
+        fwrite($f, "\$GPLdb_user = '$DB_USER';\n");
+        fwrite($f, "\$GPLdb_pass = '$DB_PASSWORD';\n");
+        fwrite($f, "\$GPLdb_name = '$DB_NAME';\n");
+        fwrite($f, "?>");
+        fclose($f);
+        @chmod($file, 0606);
+    }
+    echo "<meta http-equiv='content-type' content='text/html; charset=UTF-8'>";
+    echo "<script type='text/javascript'>alert('DB 설정이 완료 되었습니다.');</script>";
+    echo "<meta http-equiv='Refresh' content='0;url=/'>";
 }
-echo "<meta http-equiv='content-type' content='text/html; charset=UTF-8'>";
-echo "<script type='text/javascript'>alert('DB 설정이 완료 되었습니다.');</script>";
-echo "<meta http-equiv='Refresh' content='0;url=/'>";
 ?>
