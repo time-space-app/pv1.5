@@ -2,3 +2,5 @@
 time-space/**/db.php
 # .tmb 임시폴더
 .tmb/
+phpmyadmin/yarn.lock
+phpmyadmin/package.json
