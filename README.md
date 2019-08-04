@@ -1,4 +1,12 @@
-# v1.5
+# pv1.5 = v1.5 + 파스타 클라우드기반 코딩 + phpMyAdmin
+/*타입스페이스 pv1.5 변경내역 */ 
+타임스페이스 v1.5 를 클라우드(파스타)용으로 변경한 타임스페이스 pv1.5 입니다. 
+DB외부 접근이 어려 클라우드 특성상 내부에 phpMyAdim 플러그인도 클라우드용으로 변경해서 추가해 놓았습니다.
+…확인 URL: http://timespace.paas-ta.org
+phpMyAdmin: 기술참조
+https://github.com/atineoSE/sample-php-app-cloudfoundry
+https://stackoverflow.com/questions/44068922/cloud-foundry-php-website-instance-crashes-with-custom-mime-configuration
+
  /*타입스페이스 v1.5 변경내역 */ 
  - 앞으로 이 코멘트는 https://time-space-app.github.io Git기술문서 사이트에 작성예정.
  - 앞으로 이곳은 TimeSpace-v!.5 소스만 존재하게 됩니다.
